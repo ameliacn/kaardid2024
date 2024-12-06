@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Virtuaalne Viiul</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
+    <script>
+      let strings = [];
+      let osc;
+      let melody = []; // Salvestab laulu nootide järjestuse
+      let isPlaying = false; // Kas mängib meloodiat
+      
+      function setup() {
+        createCanvas(600, 400);
+        background(220);
+
+        // Viiulikeelte sagedused (E5, A4, D4, G3)
+        let stringFrequencies = [659.25, 440.00, 293.66, 196.00];
+
+        // Loo viiulikeeled ja määrake sagedused
+        for (let i = 0; i < stringFrequencies.length; i++) {
+          strings.push({
+            y: (i + 1) * (height / (stringFrequencies.length + 1)), // Keelte kõrgused
+            baseFreq: stringFrequencies[i], // Algne sagedus
+          });
+        }
+
+        // Loo ostsillaator
+        osc = new p5.Oscillator('sine');
+
+        // Lisa meloodia
+        melody = [
+          { freq: 440.00, duration: 500 }, // A (Twinkle Twinkle)
+          { freq: 440.00, duration: 500 },
+          { freq: 659.25, duration: 500 }, // E
+          { freq: 659.25, duration: 500 },
+          { freq: 739.99, duration: 500 }, // F#
+          { freq: 739.99, duration: 500 },
+          { freq: 659.25, duration: 1000 }, // E (hold)
+
+          { freq: 587.33, duration: 500 }, // D
+          { freq: 587.33, duration: 500 },
+          { freq: 523.25, duration: 500 }, // C
+          { freq: 523.25, duration: 500 },
+          { freq: 440.00, duration: 500 }, // A
+          { freq: 440.00, duration: 500 },
+          { freq: 440.00, duration: 1000 }, // A (hold)
+        ];
+      }
+
+      function playMelody() {
+        if (isPlaying) return; // Vältimaks korduvat mängimist
+        isPlaying = true;
+
+        let index = 0;
+
+        function playNote() {
+          if (index < melody.length) {
+            let note = melody[index];
+            osc.freq(note.freq);
+            osc.start();
+
+            setTimeout(() => {
+              osc.stop();
+              index++;
+              playNote(); // Jätka järgmise noodiga
+            }, note.duration);
+          } else {
+            isPlaying = false; // Meloodia mängimine lõpetatud
+          }
+        }
+
+        playNote(); // Käivita noodimängija
+      }
+
+      function draw() {
+        background(220);
+        textSize(16);
+        fill(0);
+
+        // Kuvab keelte nimed ja sagedused
+        let stringNames = ['E (659.25 Hz)', 'A (440.00 Hz)', 'D (293.66 Hz)', 'G (196.00 Hz)'];
+        for (let i = 0; i < strings.length; i++) {
+          textAlign(LEFT);
+          text(stringNames[i], 10, strings[i].y - 10); // Kuvatakse keele sagedus
+          stroke(0);
+          line(0, strings[i].y, width, strings[i].y);
+        }
+
+        // Lisage juhis meloodia esitamiseks
+        textAlign(CENTER);
+        text("Klikka tühikut, et mängida meloodiat!", width / 2, height - 20);
+      }
+
+      function keyPressed() {
+        if (key === ' ') {
+          playMelody(); // Käivita meloodia, kui vajutatakse tühikut
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Virtuaalne Viiul</h1>
+    <p>Vajuta tühikut, et mängida meloodiat. Lohista keeli, et mängida käsitsi noote.</p>
+  </body>
+</html>
