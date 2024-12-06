@@ -9,7 +9,7 @@
       let osc;
       let melody = []; // Salvestab laulu nootide järjestuse
       let isPlaying = false; // Kas mängib meloodiat
-      
+
       function setup() {
         createCanvas(600, 400);
         background(220);
@@ -28,23 +28,23 @@
         // Loo ostsillaator
         osc = new p5.Oscillator('sine');
 
-        // Lisa meloodia
+        // Lisa meloodia (parandatud Twinkle Twinkle Little Star)
         melody = [
-          { freq: 440.00, duration: 500 }, // A (Twinkle Twinkle)
-          { freq: 440.00, duration: 500 },
+          { freq: 440.00, duration: 500 }, // A
+          { freq: 440.00, duration: 500 }, // A
           { freq: 659.25, duration: 500 }, // E
-          { freq: 659.25, duration: 500 },
+          { freq: 659.25, duration: 500 }, // E
           { freq: 739.99, duration: 500 }, // F#
-          { freq: 739.99, duration: 500 },
-          { freq: 659.25, duration: 1000 }, // E (hold)
+          { freq: 739.99, duration: 500 }, // F#
+          { freq: 659.25, duration: 1000 }, // E
 
           { freq: 587.33, duration: 500 }, // D
-          { freq: 587.33, duration: 500 },
+          { freq: 587.33, duration: 500 }, // D
           { freq: 523.25, duration: 500 }, // C
-          { freq: 523.25, duration: 500 },
+          { freq: 523.25, duration: 500 }, // C
           { freq: 440.00, duration: 500 }, // A
-          { freq: 440.00, duration: 500 },
-          { freq: 440.00, duration: 1000 }, // A (hold)
+          { freq: 440.00, duration: 500 }, // A
+          { freq: 440.00, duration: 1000 }, // A
         ];
       }
 
@@ -71,6 +71,24 @@
         }
 
         playNote(); // Käivita noodimängija
+      }
+
+      function mouseDragged() {
+        for (let string of strings) {
+          if (abs(mouseY - string.y) < 10) { // Kui hiir on lähedal keelele
+            // Arvuta sagedus: algsagedus + hiire X-telje mõju
+            let pitch = string.baseFreq * Math.pow(2, (mouseX - width / 2) / width);
+            osc.freq(pitch);
+
+            // Kui heli pole mängimas, alusta
+            if (!osc.started) osc.start();
+            return; // Kui leidsime sobiva keele, lõpetame ülejäänud kontrolli
+          }
+        }
+      }
+
+      function mouseReleased() {
+        osc.stop(); // Lõpeta heli, kui hiir tõstetakse
       }
 
       function draw() {
