@@ -2,18 +2,18 @@
 <html>
     <head>
         <title>Pildi leht</title>
-    <script>
-        function vajutus(){
-            vastus.innerText=valik1.value;
-            let address="https://script.google.com/macros/s/AKfycbxncPu0X0Ds0QgIYKqV5lTRMdk6t0bI4l_BrfM_7ikT1vUiMeIqDKIe52A82CbvcmrnHQ/exec?hinnang="+valik1.value;
-            fetch(aadress).then(d => d.text()).then(function(t){vastus.innerText=t;})
-        }
-    </script>
+        <script>
+            function vajutus(){
+                vastus.innerText=valik1.value;
+                let aadress="https://script.google.com/macros/s/AKfycbxncPu0X0Ds0QgIYKqV5lTRMdk6t0bI4l_BrfM_7ikT1vUiMeIqDKIe52A82CbvcmrnHQ/exec?hinnang="+valik1.value;
+                fetch(aadress).then(d => d.text()).then(function(t){vastus.innerText=t;})
+            }
+        </script>
     </head>
     <body>
         <h1>Pildi uudistamise leht</h1>
         <img src="noot.png" /><br />
-        <select id="valik1">
+        <select id="valik1" >
             <option>meeldib</option>
             <option>armastan</option>
             <option>ei meeldi</option>
